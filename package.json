@@ -1,6 +1,6 @@
 {
   "name": "ajv-refdata",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Add keywords `$ref$data` and `async$ref$data` to Ajv.",
   "main": "index.js",
   "keywords": [
