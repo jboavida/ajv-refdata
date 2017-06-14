@@ -13,5 +13,39 @@
     "relative JSON pointer"
   ],
   "author": "João Pedro Boavida",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/jboavida/ajv-refdata",
+  "bugs": {
+    "url": "https://github.com/jboavida/ajv-refdata/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jboavida/ajv-refdata.git"
+  },
+  "scripts": {
+    "eslint": "eslint --ignore-path .gitignore",
+    "test": "mocha test.js"
+  },
+  "engines": {
+    "node": "6 || 8"
+  },
+  "peerDependencies": {
+    "ajv": "^4.6 || 5"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.0.0",
+    "co": "^4.6.0",
+    "dirty-chai": "^2.0.0",
+    "eslint": "^4",
+    "mocha": "^3.4.1"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "mocha": true,
+      "node": true
+    },
+    "extends": "eslint:recommended"
+  }
 }
