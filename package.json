@@ -1,0 +1,17 @@
+{
+  "name": "ajv-refdata",
+  "version": "0.0.0",
+  "description": "Add keywords `$ref$data` and `async$ref$data` to Ajv.",
+  "main": "index.js",
+  "keywords": [
+    "Ajv",
+    "JSON schema",
+    "$ref",
+    "$data",
+    "$ref$data",
+    "JSON pointer",
+    "relative JSON pointer"
+  ],
+  "author": "João Pedro Boavida",
+  "license": "MIT"
+}
