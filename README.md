@@ -1,6 +1,8 @@
 ajv-refdata
 ===========
 
+[![Build Status](https://travis-ci.org/jboavida/ajv-refdata.svg?branch=master)](https://travis-ci.org/jboavida/ajv-refdata)
+
 Add keywords `$ref$data` and `async$ref$data` to [Ajv](https://github.com/epoberezkin/ajv).
 
 `$ref$data` is a custom keyword for JSON schema. It takes an array of strings and `$data` pointers, generates a schema id from them, and invokes that schema with `$ref`. This package adds the keyword to an Ajv instance.

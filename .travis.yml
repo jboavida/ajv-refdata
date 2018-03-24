@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "6"
+  - "8"
+env:
+  - AJV_VERSION=4
+  - AJV_VERSION=5
+matrix:
+  exclude:
+    - env: AJV_VERSION=4
+      node_js: "8"
+install:
+  - npm install
+  - npm install ajv@$AJV_VERSION
+cache:
+  directories:
+    - "node_modules"
