@@ -38,7 +38,7 @@
     "co": "^4.6.0",
     "dirty-chai": "^2.0.0",
     "eslint": "^4",
-    "mocha": "^3.4.1"
+    "mocha": "^5.0.5"
   },
   "eslintConfig": {
     "env": {
