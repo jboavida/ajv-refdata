@@ -2,6 +2,7 @@ ajv-refdata
 ===========
 
 [![Build Status](https://travis-ci.org/jboavida/ajv-refdata.svg?branch=master)](https://travis-ci.org/jboavida/ajv-refdata)
+[![Greenkeeper badge](https://badges.greenkeeper.io/jboavida/ajv-refdata.svg)](https://greenkeeper.io/)
 
 Add keywords `$ref$data` and `async$ref$data` to [Ajv](https://github.com/epoberezkin/ajv).
 
