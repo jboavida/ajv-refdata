@@ -440,6 +440,19 @@ describe(`$ref$data`, function () {
       test(4);
       expect(test.errors || []).to.eql([]);
       expect(test('s')).not.to.be.ok();
+
+      test = ajv.compile({
+        id: '/complex',
+        definitions: {
+          b: { properties: { value: { type: 'boolean' } } },
+          i: { properties: { value: { type: 'integer' } } }
+        },
+        items: { $ref$data: ['/complex#/definitions/', '0/type'] },
+        type: 'array'
+      });
+      test([{ type: 'i', value: 4 }, { type: 'b', value: false }]);
+      expect(test.errors || []).to.eql([]);
+      expect(test([{ type: 'b', value: 5 }])).not.to.be.ok();
     });
 
     it(`fails to invoke async schema from sync schema`, function () {

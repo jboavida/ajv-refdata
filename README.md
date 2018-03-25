@@ -41,7 +41,21 @@ Example and description
 ```
 first replaces the odd-numbered strings by the result of the corresponding `$data` object (for example, `"string1"` is replaced by the result of `{ "$data": "string1" }`), joins all the resulting strings (both the unchanged even- and the replaced odd-numbered), and invokes (as with `$ref`) the schema with the id thus obtained. Relative pointers are resolved relative to the object to which the schema applies.
 
-For example, say we are validating the object
+The purpose of this keyword is to let the applicable schema be determined based on parts of the data. In a natural scenario, the schema
+```json
+{
+  "$id": "/complex",
+  "definitions": {
+    "b": { "properties": { "value": { "type": "boolean" } } },
+    "i": { "properties": { "value": { "type": "integer" } } }
+  },
+  "items": { "$ref$data": ["/complex#/definitions/", "0/type"] },
+  "type": "array"
+}
+```
+will validate `[{ type: 'i', value: 4 }, { type: 'b', value: false }]` but not `[{ type: 'b', value: 5 }]`.
+
+For a more detailed example, say we are validating the object
 ```js
 let obj = {
   a: {
@@ -60,7 +74,7 @@ and that the schema that applies to `obj.a.e[2]` is
 }
 ```
 
-The odd-numbered strings (`"/a/b/c"`, `"2/f"`, `"1#"`, `"2#"`) are first interpreted as [JSON pointers](https://tools.ietf.org/html/rfc6901) or [relative JSON pointers](https://tools.ietf.org/html/draft-luff-relative-json-pointer-00) and processed as if they were `$data` references. So:
+The odd-numbered strings (`"/a/b/c"`, `"2/f"`, `"1#"`, `"2#"`) are first interpreted as [JSON pointers](https://tools.ietf.org/html/rfc6901) or [relative JSON pointers](https://tools.ietf.org/html/draft-handrews-relative-json-pointer-01) and processed as if they were `$data` references. So:
 - `"/a/b/c"` is processed as `{ "$data": "/a/b/c" }`, it points to `obj.a.b.c`, and the result is `"d"`;
 - `"2/f"` is evaluated relative to the starting point `obj.a.e[2]`, so it refers to `obj.a.f` and the result is `"g"`;
 - `"1#"` points to the last key in `obj.a.e`, which is `"e"`;
@@ -160,13 +174,22 @@ The requested schema id should be an URI reference, and is resolved with respect
 
 There is some ambiguity in how the base id is supposed to change when moving into a schema that doesn't have its own id. For example, with the schema
 ```json
-{ "id": "/top/level", "definitions": { "inner": { "schema": "without id" } } }
+{ "$id": "/top/level", "definitions": { "inner": { "schema": "without id" } } }
 ```
-if no `"id"` is specified directly on the inner schema (reachable with `"/top/level#/definitions/inner"`), then the base id could either stay whatever it was before, or change to `"/top/level#/definitions/inner"`, depending on how implementations address the ambiguity.
+if no `"$id"` is specified directly on the inner schema (reachable with `"/top/level#/definitions/inner"`), then the base id could either stay whatever it was before, or change to `"/top/level#/definitions/inner"`, depending on how implementations address the ambiguity.
 
-`$ref$data` always invokes schemas separately (and so changes the base id). Ajv does the same for `$ref` when the instance has `inlineRefs: false`. Currently (version 5.1.5), when using `inlineRefs: true` (the default), schemas invoked with `$ref` can be directly inlined, and in that case the base id does not change.
+Moreover, if the referred schema's URI starts with `#`, it can only be resolved from within a schema with a specified base id. For example,
+```json
+{
+  "definitions": { "one": {} },
+  "$ref$data": ["#/definitions/one"]
+}
+```
+can only work if an `"$id"` is added at the top level.
 
-The issue can be avoided by either not nesting `$ref$data` within schemas fetched with `$ref`, or byusing `$ref$data` only to build schemas ids that are absolute URIs. Of course, using `$ref$data` to build schema ids that are relative URIs is probably not a good idea anyways: as the ids are generated at run-time only, it's not obvious, by looking at the schema, what the ultimate id will be. So, changes in the outer schema could very easily introduce errors that would be hard to debug (especially if incorrectly resolved ids also point to existing schemas).
+`$ref$data` always invokes schemas separately (and so changes the base id). Ajv does the same for `$ref` when the instance has `inlineRefs: false`. Currently (version 6.4.0), when using `inlineRefs: true` (the default), schemas invoked with `$ref` can be directly inlined, and in that case the base id does not change.
+
+The issue can be avoided by either not nesting `$ref$data` within schemas fetched with `$ref`, or by using `$ref$data` only to build schemas ids that are absolute URIs. Of course, using `$ref$data` to build schema ids that are relative URIs is probably not a good idea anyways: as the ids are generated at run-time only, it's not obvious, by looking at the schema, what the ultimate id will be. So, changes in the outer schema could very easily introduce errors that would be hard to debug (especially if incorrectly resolved ids also point to existing schemas).
 
 
 ### Missing schemas
@@ -181,12 +204,12 @@ The issue can be avoided by either not nesting `$ref$data` within schemas fetche
 Future changes; semantic versioning
 ------------------------------------
 
-This package started as a submodule of another project. Some months later, it started to make sense to factor it out as a stand-alone module and clean it up, to be easy to resume work on, even if it is several months from now. It is not likely to change much, because it currently does all the other project needs from it, and needs to keep meeting those needs.
+This package started as a submodule of another project. Some months later, it made sense to factor it out as a stand-alone module and clean it up. It is not likely to change much, because it currently does all the other project needs from it, and needs to keep meeting those needs.
 
 I intend to follow semantic versioning. At the moment, these are the likely changes:
 - I would prefer if `extendRefs: 'ignore'` did deactivate other keywords in the same schema as `$ref$data`; I'm likely to fix the [current behavior](#other-keywords-in-the-schema-asynchronous-schemas) if I figure out how to do it;
 - I may drop `async$ref$data` (or make both keywords work with both types of schemas, or some similar variation) if I find a way to make the same keyword work both for sync and async schemas;
-- if the exact details of [data paths](#json-pointers-vs-data-paths) change too much (this would not even require a patch version change in Ajv, though, given the way data paths are used in Ajv, it seems unlikely they would change), or if I did not implement the conversion correctly, `jsonPointers: true` may be needed until I make corresponding changes here;
+- if the exact details of [data paths](#json-pointers-vs-data-paths) change too much (this would not even require a patch version change in Ajv; however, given the way data paths are used in Ajv, it seems unlikely they would change), or if I did not implement the conversion correctly, `jsonPointers: true` may be needed until I make corresponding changes here;
 - so far I've only used string values (for the `$data` results), but maybe the [validation of data values](#validation-of-the-data-values) could be less strict.
 
 
