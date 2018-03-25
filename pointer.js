@@ -11,12 +11,12 @@ module.exports = compilePointer;
  * cannot be reached).
  *
  * @param {string} pointer  - a JSON pointer or relative JSON pointer
- * @param {string} [msg] - initial string for error messages
- * @param {number} [maxDepth] - limit of up steps (see {@link checkSpec})
+ * @param {string} [msg='reference'] - initial string for error messages
+ * @param {number} [maxDepth=Infinity] - max up steps (see {@link checkSpec})
  * @return {function(Object, string[])} - obtained from {@link pointerFn}
  */
 
-function compilePointer(pointer, msg='reference', maxDepth=Infinity) {
+function compilePointer(pointer, msg, maxDepth) {
   let spec = breakPointer(pointer);
   checkSpec(spec, msg, maxDepth);
   return pointerFn(spec);
@@ -86,7 +86,7 @@ function breakPointer(pointer) {
  *
  * @private
  * @param {Object} spec - obtained from {@link breakPointer}
- * @param {string} [msg] - beginning of error message for thrown errors
+ * @param {string} [msg='reference'] - beginning of message for thrown errors
  * @param {number} [maxDepth=Infinity] - maximum depth
  * @throws {Error} if pointer is invalid
  * @throws {Error} if pointer asks for key at or above `maxDepth` levels up

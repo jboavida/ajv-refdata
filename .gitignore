@@ -2,3 +2,4 @@ node_modules/
 
 .ash_history
 .npm/
+.nyc_output/

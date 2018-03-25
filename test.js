@@ -23,19 +23,25 @@ function ajvWithOptions(...opts) {
 
 describe(`pointer compiler`, function () {
   it(`rejects $data reference to value above root`, function () {
+    expect(() => compilePointer('1/a/b', '', 0)).to.throw();
     expect(() => compilePointer('3/a/b', '', 2)).to.throw();
     expect(() => compilePointer('5/~0a/~1/b#', '', 3)).to.throw();
     expect(() => compilePointer('5/~0a/~1/b#', '', 5)).not.to.throw();
+    expect(() => compilePointer('5/~0a/~1/b#', '')).not.to.throw();
   });
 
   it(`rejects $data reference to key above root`, function () {
+    expect(() => compilePointer('0#', '', 0)).to.throw();
+    expect(() => compilePointer('1#', '', 2)).not.to.throw();
     expect(() => compilePointer('2#', '', 2)).to.throw();
     expect(() => compilePointer('3#', '', 2)).to.throw();
     expect(() => compilePointer('3#', '', 4)).not.to.throw();
+    expect(() => compilePointer('3#', '')).not.to.throw();
   });
 
   it(`rejects invalid $data reference`, function () {
     expect(() => compilePointer('0#4', '', 2)).to.throw();
+    expect(() => compilePointer('0/~', '', 2)).to.throw();
     expect(() => compilePointer('0/~', '')).to.throw();
   });
 
@@ -199,6 +205,22 @@ describe(`$ref$data`, function () {
       items: { maximum: 4, $ref$data: ['a']}
     };
     expect(() => ajv.compile(schema)).to.throw();
+  });
+
+  it(`tolerates sibling keywords if 'extendRefs' set to false`, function () {
+    let ajv = ajvWithOptions({ extendRefs: false });
+    let schema = {
+      items: { maximum: 4, $ref$data: ['a']}
+    };
+    expect(() => ajv.compile(schema)).not.to.throw();
+  });
+
+  it(`accepts sibling keywords if 'extendRefs' set to true`, function () {
+    let ajv = ajvWithOptions({ extendRefs: true });
+    let schema = {
+      items: { maximum: 4, $ref$data: ['a']}
+    };
+    expect(() => ajv.compile(schema)).not.to.throw();
   });
 
   context(`while creating schema id`, function () {
