@@ -100,6 +100,7 @@ let ajv = Ajv();
 let ajvRefdata = require('ajv-refdata');
 ajvRefdata(ajv);
 ```
+(or `ajvRefdata(ajv, options)`, to set package options to be used in that Ajv instance).
 
 
 Options and behavior
@@ -115,7 +116,13 @@ let ajv = Ajv({
   missingRefs: 'ignore'
 });
 ```
-are the options (and some of the values) relevant to ajv-refdata.
+are the options (and some of the values) relevant to ajv-refdata. The package itself accepts the following option
+```js
+ajvRefdata(ajv, {
+  missingRefs: 'ignore'
+});
+```
+which (if provided) is used instead of the Ajv instance's own `missingRefs`.
 
 
 ### Other keywords in the schema; asynchronous schemas
@@ -165,9 +172,10 @@ The issue can be avoided by either not nesting `$ref$data` within schemas fetche
 ### Missing schemas
 
 `$ref$data` tries to handle missing schemas in the same way that `$ref` does, but there are differences:
-- if the instance has `missingRefs: 'ignore'`, then validation succeeds;
-- if the instance has `missingRefs: 'fail'`, validation fails (this condition can be determined only at run-time, so *no error is logged during compilation*);
-- if the instance has `missingRefs: true` (or any value other than `'ignore'`), then validation fails.
+- if `missingRefs` was set [when adding the keyword](#options-and-behavior), then that value supersedes the instance's;
+- if the instance (or package) has `missingRefs: 'ignore'`, then validation succeeds;
+- if the instance (or package) has `missingRefs: 'fail'`, validation fails (this condition can be determined only at run-time, so *no error is logged during compilation*);
+- if the instance (or package) has `missingRefs: true` (or any value other than `'ignore'`), then validation fails.
 
 
 Future changes; semantic versioning
@@ -179,8 +187,7 @@ I intend to follow semantic versioning. At the moment, these are the likely chan
 - I would prefer if `extendRefs: 'ignore'` did deactivate other keywords in the same schema as `$ref$data`; I'm likely to fix the [current behavior](#other-keywords-in-the-schema-asynchronous-schemas) if I figure out how to do it;
 - I may drop `async$ref$data` (or make both keywords work with both types of schemas, or some similar variation) if I find a way to make the same keyword work both for sync and async schemas;
 - if the exact details of [data paths](#json-pointers-vs-data-paths) change too much (this would not even require a patch version change in Ajv, though, given the way data paths are used in Ajv, it seems unlikely they would change), or if I did not implement the conversion correctly, `jsonPointers: true` may be needed until I make corresponding changes here;
-- so far I've only used string values (for the `$data` results), but maybe the [validation of data values](#validation-of-the-data-values) could be less strict;
-- I'm not sure missing schemas should always be treated exactly in the same way for `$ref` and `$ref$data` (because the latter is resolved only at validation time and has way more, and more opaque, failure modes), so I may either change to always reject, or have some way to fail for `$ref$data` even when the instance has `missingRefs: 'ignore'`.
+- so far I've only used string values (for the `$data` results), but maybe the [validation of data values](#validation-of-the-data-values) could be less strict.
 
 
 Contributions
@@ -194,4 +201,4 @@ Issues (bug reports, suggestions, etc.) are welcome, but I may take some time to
 License
 -------
 
-Copyright (c) 2017 João Pedro Boavida. Licensed under the [MIT License](LICENSE).
+Copyright © 2017–2018 João Pedro Boavida. Licensed under the [MIT License](LICENSE).

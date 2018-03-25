@@ -12,19 +12,16 @@ const compilePointer = require('./pointer');
  * keywords (for sync and async schemas, respectively).
  *
  * @param {Object} ajv - the Ajv instance
+ * @param {Object} [opts={}] - the plugin options
  */
 
-module.exports = function (ajv) {
-  ajv.addKeyword('$ref$data', {
-    compile: $ref$data,
-    errors: true,
-    metaSchema: { items: { type: 'string' }, type: 'array' }
-  });
+module.exports = function (ajv, opts={}) {
+  let compile = (...args) => $ref$data(opts, ...args);
+  let metaSchema = { items: { type: 'string' }, type: 'array' };
+
+  ajv.addKeyword('$ref$data', { compile, errors: true, metaSchema });
   ajv.addKeyword('async$ref$data', {
-    async: true,
-    compile: $ref$data,
-    errors: true,
-    metaSchema: { items: { type: 'string' }, type: 'array' }
+    async: true, compile, errors: true, metaSchema
   });
 
   return ajv;
@@ -38,7 +35,7 @@ let $pathToPtr = /(?:\[([0-9]+)\]|\.([^.[]+)|\['((?:[^\\']|\\\\|\\')*)'\])/g;
  * @private
  */
 
-function $ref$data(schema, parentSchema, it) {
+function $ref$data(opts, schema, parentSchema, it) {
   let $async = it.async;
   let $keyword = $async ? 'async$ref$data' : '$ref$data';
 
@@ -53,15 +50,15 @@ function $ref$data(schema, parentSchema, it) {
 
   // schema to validate (and possibly coerce) the resolved pieces
   let $fragsSchema = it.self.compile({
-    // eslint-disable-next-line no-unused-vars
     items: $pieces.map((_, idx) => idx % 2 ? { type: 'string' } : {})
   });
 
   // isolate only the values we need within the closure
   let {
     baseId: $baseId,
-    opts: { jsonPointers: $jsonPointers, missingRefs: $missingRefs }
+    opts: { jsonPointers: $jsonPointers }
   } = it;
+  let { missingRefs: $missingRefs=it.opts.missingRefs } = opts;
   let $getSchema = it.self.getSchema.bind(it.self);
 
   // run-time validation function

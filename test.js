@@ -13,11 +13,11 @@ const ajvVersion = require('ajv/package.json').version;
 const ajvRefdata = require('.');
 const compilePointer = require('./pointer');
 
-function ajvWithOptions(...opts) {
-  if (ajvVersion.match(/^4/)) opts.push({ v5: true });
-  if (ajvVersion.match(/^6/)) opts.push({ schemaId: 'auto' });
-  opts = Object.assign({}, ...opts);
-  return ajvRefdata(Ajv(opts));
+function ajvWithOptions(ajvOpts, pluginOpts) {
+  ajvOpts = Object.assign({}, ajvOpts);
+  if (ajvVersion.match(/^4/)) Object.assign(ajvOpts, { v5: true });
+  if (ajvVersion.match(/^6/)) Object.assign(ajvOpts, { schemaId: 'auto' });
+  return ajvRefdata(Ajv(ajvOpts), pluginOpts);
 }
 
 
@@ -241,7 +241,7 @@ describe(`$ref$data`, function () {
     });
 
     it(`does not convert path if 'jsonPointers' set to true`, function () {
-      let ajv = ajvWithOptions( { jsonPointers: true, schemas: [
+      let ajv = ajvWithOptions({ jsonPointers: true, schemas: [
         { id: 'any', enum: [4] }
       ] });
       let test = ajv.compile({
@@ -381,6 +381,22 @@ describe(`$ref$data`, function () {
     , function () {
       let ajv = ajvWithOptions({ missingRefs: 'ignore' });
       let test = ajv.compile({ $ref$data: ['', '/a'] });
+      test({ a: 'does-not-exist' });
+      expect(test.errors || []).to.eql([]);
+    });
+
+    it(`uses package's 'missingRefs' if provided`, function () {
+      let ajv = ajvWithOptions(
+        { missingRefs: 'ignore', schemas: [ { id: 'exists' } ] },
+        { missingRefs: true }
+      );
+      let test = ajv.compile({ $ref$data: ['', '/a'] });
+      test({ a: 'exists' });
+      expect(test.errors || []).to.eql([]);
+      expect(test({ a: 'does-not' })).not.to.be.ok();
+
+      ajv = ajvWithOptions({ missingRefs: true }, { missingRefs: 'ignore' });
+      test = ajv.compile({ $ref$data: ['', '/a'] });
       test({ a: 'does-not-exist' });
       expect(test.errors || []).to.eql([]);
     });
@@ -550,13 +566,16 @@ describe(`$ref$data`, function () {
           $ref: 'nested/first#/definitions/next',
           $ref$data: ['nested/first#/definitions/next']
         };
-        let ajv = ajvWithOptions({ schemas: [
+        let schemas = [
           { id: '/nested/first', definitions: {
             next: { $ref: 'up/next#/a' }
           } },
           { id: '/nested/up/next', a: { $ref$data: ['more'] } },
           { id: '/nested/up/more', enum: [4] }
-        ] }, type == '$ref' ? { inlineRefs: false } : {});
+        ];
+        let ajv = ajvWithOptions(
+          type == '$ref' ? { inlineRefs: false, schemas } : { schemas }
+        );
         let test = ajv.compile({
           id: '/parent', items: { [type]: options[type] }
         });
@@ -570,12 +589,15 @@ describe(`$ref$data`, function () {
           $ref: 'nested#/definitions/first',
           $ref$data: ['nested#/definitions/first']
         };
-        let ajv = ajvWithOptions({ schemas: [
+        let schemas = [
           { id: '/nested', definitions: {
             first: { $ref$data: ['#/definitions/next'] },
             next: { enum: [4] }
           } }
-        ] }, type == '$ref' ? { inlineRefs: false } : {});
+        ];
+        let ajv = ajvWithOptions(
+          type == '$ref' ? { inlineRefs: false, schemas } : { schemas }
+        );
         let test = ajv.compile({
           id: '/parent', items: { [type]: options[type] }
         });
