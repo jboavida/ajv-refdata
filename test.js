@@ -14,7 +14,8 @@ const ajvRefdata = require('.');
 const compilePointer = require('./pointer');
 
 function ajvWithOptions(...opts) {
-  if (ajvVersion.match(/^4/)) opts.push = { v5: true };
+  if (ajvVersion.match(/^4/)) opts.push({ v5: true });
+  if (ajvVersion.match(/^6/)) opts.push({ schemaId: 'auto' });
   opts = Object.assign({}, ...opts);
   return ajvRefdata(Ajv(opts));
 }
@@ -623,7 +624,7 @@ describe(`$ref$data`, function () {
     });
   });
 
-  it(`accepts $id in ajv 5`, function () {
+  it(`accepts $id in ajv 5 and higher`, function () {
     let ajv = ajvWithOptions();
     if (!ajv.RULES.keywords.const) this.skip(); // not ajv 5
     ajv.addSchema({ $id: 'invoked', type: 'integer' });

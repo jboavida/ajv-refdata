@@ -2,13 +2,19 @@ language: node_js
 node_js:
   - "6"
   - "8"
+  - "9"
 env:
   - AJV_VERSION=4
   - AJV_VERSION=5
+  - AJV_VERSION=6
 matrix:
   exclude:
     - env: AJV_VERSION=4
       node_js: "8"
+    - env: AJV_VERSION=4
+      node_js: "9"
+    - env: AJV_VERSION=5
+      node_js: "9"
 install:
   - npm install
   - npm install ajv@$AJV_VERSION
