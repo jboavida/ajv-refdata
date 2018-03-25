@@ -17,7 +17,7 @@ matrix:
       node_js: "9"
 install:
   - npm install
-  - npm install ajv@$AJV_VERSION
+  - npm install ajv@$AJV_VERSION || true
 cache:
   directories:
     - "node_modules"
