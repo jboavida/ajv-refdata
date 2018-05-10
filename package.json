@@ -33,7 +33,7 @@
     "test": "nyc mocha test.js"
   },
   "engines": {
-    "node": "6 || 8 || 9"
+    "node": "6 || 8 || 9 || 10"
   },
   "peerDependencies": {
     "ajv": "^4.6 || 5 || 6"
