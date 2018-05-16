@@ -20,7 +20,7 @@ before_install:
 install:
   - GH_TOKEN= node -e 'assert(process.env.GH_TOKEN == "")'
   - GH_TOKEN= npm install
-  - GH_TOKEN= npm install ajv@$AJV_VERSION || true
+  - GH_TOKEN= npm install --no-save ajv@$AJV_VERSION || true
 before_script:
   - GH_TOKEN= greenkeeper-lockfile-update
 script:
