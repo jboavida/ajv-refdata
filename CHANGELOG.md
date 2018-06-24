@@ -1,6 +1,24 @@
 Changelog
 =========
 
+
+0.3.0 - 2018-06-24
+------------------
+
+### Changed
+
+- Update [LICENSE](LICENSE) to reflect new dates;
+- Update [README.md](README.md) (document Node.js 10 compatibility);
+- Upgrade dev dependencies in [package.json](package.json) and save [package-lock.json](package-lock.json).
+
+
+### Added
+
+- Test compatibility with Node.js 10;
+- Use `greenkeeper-lockfile`.
+
+
+
 0.2.0 - 2018-03-25
 ------------------
 

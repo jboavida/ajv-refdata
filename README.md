@@ -102,7 +102,7 @@ Some [options](#options-and-behavior) affect validation for specific cases.
 Installation and usage
 ----------------------
 
-The package is available for [Node.js](https://nodejs.org/) (6, 8, or 9), at [npm](https://www.npmjs.com/). It is installed with
+The package is available for [Node.js](https://nodejs.org/) (6, 8, 9, or 10), at [npm](https://www.npmjs.com/). It is installed with
 ```sh
 $ npm install ajv-refdata
 ```
