@@ -44,7 +44,7 @@
     "chai-as-promised": "^7.1.1",
     "co": "^4.6.0",
     "dirty-chai": "^2.0.1",
-    "eslint": "^5.0.0",
+    "eslint": "^5.1.0",
     "greenkeeper-lockfile": "^1.15.1",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2"
