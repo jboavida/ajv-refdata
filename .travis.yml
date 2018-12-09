@@ -14,19 +14,6 @@ matrix:
       node_js: "6"
     - env: AJV_VERSION=5
       node_js: "8"
-before_install:
-  - '[[ ! $(node -v) =~ ^v6.*$ ]] || npm install -g npm@latest'
-  - npm install -g greenkeeper-lockfile@1
-install:
-  - GH_TOKEN= node -e 'assert(process.env.GH_TOKEN == "")'
-  - GH_TOKEN= npm install
 before_script:
-  - GH_TOKEN= greenkeeper-lockfile-update
-  - GH_TOKEN= npm install --no-save ajv@$AJV_VERSION || true
-script:
-  - GH_TOKEN= npm test
-after_script:
-  - greenkeeper-lockfile-upload
-cache:
-  directories:
-    - "node_modules"
+  - npm install --no-save ajv@$AJV_VERSION || true
+cache: npm

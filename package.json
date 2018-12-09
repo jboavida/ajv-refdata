@@ -45,7 +45,6 @@
     "co": "^4.6.0",
     "dirty-chai": "^2.0.1",
     "eslint": "^5.7.0",
-    "greenkeeper-lockfile": "^1.15.1",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0"
   },
