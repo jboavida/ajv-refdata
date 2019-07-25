@@ -2,6 +2,28 @@ Changelog
 =========
 
 
+0.4.0 - 2019-07-25
+------------------
+
+### Removed
+
+- No longer test compatibility with Node.js 6 or 9, nor with Ajv 4;
+- No longer use now unneeded dev dependencies `greenkeeper-lockfile` and `ajv-async`.
+
+
+### Changed
+
+- Update [LICENSE](LICENSE) to reflect new dates;
+- Update [README.md](README.md) (document Node.js 11 and 12 compatibility, and lack of support for 6 and 9);
+- Upgrade dev dependencies in [package.json](package.json) and save [package-lock.json](package-lock.json).
+
+
+### Added
+
+- Test compatibility with Node.js 11 and 12.
+
+
+
 0.3.0 - 2018-06-24
 ------------------
 

@@ -102,7 +102,7 @@ Some [options](#options-and-behavior) affect validation for specific cases.
 Installation and usage
 ----------------------
 
-The package is available for [Node.js](https://nodejs.org/) (6, 8, 9, or 10), at [npm](https://www.npmjs.com/). It is installed with
+The package is available for [Node.js](https://nodejs.org/) (8, 10, 11 or 12), at [npm](https://www.npmjs.com/). It is installed with
 ```sh
 $ npm install ajv-refdata
 ```
@@ -187,7 +187,7 @@ Moreover, if the referred schema's URI starts with `#`, it can only be resolved 
 ```
 can only work if an `"$id"` is added at the top level.
 
-`$ref$data` always invokes schemas separately (and so changes the base id). Ajv does the same for `$ref` when the instance has `inlineRefs: false`. Currently (version 6.4.0), when using `inlineRefs: true` (the default), schemas invoked with `$ref` can be directly inlined, and in that case the base id does not change.
+`$ref$data` always invokes schemas separately (and so changes the base id). Ajv does the same for `$ref` when the instance has `inlineRefs: false`. As of version 6.4.0, when using `inlineRefs: true` (the default), schemas invoked with `$ref` can be directly inlined, and in that case the base id does not change.
 
 The issue can be avoided by either not nesting `$ref$data` within schemas fetched with `$ref`, or by using `$ref$data` only to build schemas ids that are absolute URIs. Of course, using `$ref$data` to build schema ids that are relative URIs is probably not a good idea anyways: as the ids are generated at run-time only, it's not obvious, by looking at the schema, what the ultimate id will be. So, changes in the outer schema could very easily introduce errors that would be hard to debug (especially if incorrectly resolved ids also point to existing schemas).
 
@@ -224,4 +224,4 @@ Issues (bug reports, suggestions, etc.) are welcome, but I may take some time to
 License
 -------
 
-Copyright © 2017–2018 João Pedro Boavida. Licensed under the [MIT License](LICENSE).
+Copyright © 2017–2019 João Pedro Boavida. Licensed under the [MIT License](LICENSE).

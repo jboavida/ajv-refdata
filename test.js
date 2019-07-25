@@ -10,17 +10,13 @@ const co = require('co');
 const Ajv = require('ajv');
 const ajvVersion = require('ajv/package.json').version;
 
-const ajvAsync = require('ajv-async');
-
 const ajvRefdata = require('.');
 const compilePointer = require('./pointer');
 
 function ajvWithOptions(ajvOpts, pluginOpts) {
   ajvOpts = Object.assign({}, ajvOpts);
-  if (ajvVersion.match(/^4/)) Object.assign(ajvOpts, { v5: true });
   if (ajvVersion.match(/^6/)) Object.assign(ajvOpts, { schemaId: 'auto' });
   let ajv = Ajv(ajvOpts);
-  if (process.version.match(/^v6/) && ajvVersion.match(/^6/)) ajvAsync(ajv);
   return ajvRefdata(ajv, pluginOpts);
 }
 
