@@ -2,6 +2,28 @@ Changelog
 =========
 
 
+0.5.0 - 2020-07-02
+------------------
+
+### Removed
+
+- No longer test compatibility with Node.js 8 or 11, nor with Ajv 5;
+- Cease use of Greenkeeper.
+
+### Changed
+
+- Update [LICENSE](LICENSE) to reflect new dates;
+- Update [README.md](README.md) (document Node.js 14 compatibility, and lack of support for 8 and 11);
+- Upgrade dev dependencies in [package.json](package.json) and save [package-lock.json](package-lock.json).
+
+
+### Added
+
+- Test compatibility with Node.js 14;
+- Activate GitHub Dependabot.
+
+
+
 0.4.0 - 2019-07-25
 ------------------
 
