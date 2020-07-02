@@ -101,7 +101,7 @@ Some [options](#options-and-behavior) affect validation for specific cases.
 Installation and usage
 ----------------------
 
-The package is available for [Node.js](https://nodejs.org/) (8, 10, 11 or 12), at [npm](https://www.npmjs.com/). It is installed with
+The package is available for [Node.js](https://nodejs.org/) (10, 12 or 14), at [npm](https://www.npmjs.com/). It is installed with
 ```sh
 $ npm install ajv-refdata
 ```
@@ -223,4 +223,4 @@ Issues (bug reports, suggestions, etc.) are welcome, but I may take some time to
 License
 -------
 
-Copyright © 2017–2019 João Pedro Boavida. Licensed under the [MIT License](LICENSE).
+Copyright © 2017–2020 João Pedro Boavida. Licensed under the [MIT License](LICENSE).
